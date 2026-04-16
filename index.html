@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALPHA_G SACCO</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Vertical Left Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>🏦 ALPHA_G</h2>
+                <p>Management System</p>
+            </div>
+            <nav class="sidebar-nav">
+                <button class="nav-btn active" data-page="dashboard">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">Dashboard</span>
+                </button>
+                <button class="nav-btn" data-page="members">
+                    <span class="nav-icon">👥</span>
+                    <span class="nav-text">Members</span>
+                </button>
+                <button class="nav-btn" data-page="savings">
+                    <span class="nav-icon">💰</span>
+                    <span class="nav-text">Savings</span>
+                </button>
+                <button class="nav-btn" data-page="loans">
+                    <span class="nav-icon">📈</span>
+                    <span class="nav-text">Loans</span>
+                </button>
+                <button class="nav-btn" data-page="expenditure">
+                    <span class="nav-icon">💸</span>
+                    <span class="nav-text">Expenditure</span>
+                </button>
+                <button class="nav-btn" data-page="financial">
+                    <span class="nav-icon">📑</span>
+                    <span class="nav-text">Financial Statements</span>
+                </button>
+                <button class="nav-btn" data-page="reports">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">Reports</span>
+                </button>
+                <button class="nav-btn" data-page="ledger">
+                    <span class="nav-icon">📒</span>
+                    <span class="nav-text">General Ledger</span>
+                </button>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="system-status">
+                    <span class="status-dot"></span>
+                    <span>System Online</span>
+                </div>
+                <div class="version">Version 2.0</div>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="main-container">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div class="page-title" id="pageTitle">Dashboard</div>
+                <div class="user-info">
+                    <span class="date-display" id="currentDate"></span>
+                    <div class="user-avatar">👨‍💼</div>
+                </div>
+            </div>
+
+            <!-- Pages Content -->
+            <div class="content-wrapper">
+                <!-- Dashboard Page -->
+                <div id="dashboard" class="page active">
+                    <!-- Stats Cards -->
+                    <div class="stats-grid" id="dashboardStats"></div>
+                    
+                    <!-- Charts Row -->
+                    <div class="charts-row">
+                        <div class="card chart-card">
+                            <h2>📊 Savings & Loans Overview</h2>
+                            <canvas id="savingsLoansChart"></canvas>
+                        </div>
+                        <div class="card chart-card">
+                            <h2>🥧 Income Distribution</h2>
+                            <canvas id="incomeChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="charts-row">
+                        <div class="card chart-card">
+                            <h2>📈 Loan Portfolio at Risk (PAR)</h2>
+                            <canvas id="parChart"></canvas>
+                        </div>
+                        <div class="card chart-card">
+                            <h2>👥 Member Growth</h2>
+                            <canvas id="memberGrowthChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="charts-row">
+                        <div class="card chart-card">
+                            <h2>💰 Monthly Financial Performance</h2>
+                            <canvas id="monthlyPerformanceChart"></canvas>
+                        </div>
+                        <div class="card chart-card">
+                            <h2>📋 Loan Types Distribution</h2>
+                            <canvas id="loanTypesChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h2>📅 Recent Transactions</h2>
+                        <div id="recentTransactions"></div>
+                    </div>
+                </div>
+
+                <!-- Members Page -->
+                <div id="members" class="page">
+                    <div class="card">
+                        <h2>Register New Member</h2>
+                        <form id="memberForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Full Name</label>
+                                    <input type="text" id="memberName" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>ID Number</label>
+                                    <input type="number" id="memberId" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Phone Number</label>
+                                    <input type="tel" id="memberPhone" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Membership Type</label>
+                                    <select id="memberType">
+                                        <option value="Individual">Individual</option>
+                                        <option value="CIG">CIG (Common Interest Group)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Register Member (Fee: KSH 1,000)</button>
+                        </form>
+                    </div>
+                    <div class="card">
+                        <h2>Member List</h2>
+                        <div class="table-container">
+                            <table id="membersTable">
+                                <thead>
+                                    <tr><th>ID</th><th>Name</th><th>Phone</th><th>Type</th><th>Savings</th><th>Loan Balance</th><th>Status</th><th>Actions</th>
+                                </thead>
+                                <tbody id="membersList"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Savings Page -->
+                <div id="savings" class="page">
+                    <div class="card">
+                        <h2>Savings Transaction</h2>
+                        <form id="savingsForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Select Member</label>
+                                    <select id="savingsMember" required></select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Transaction Type</label>
+                                    <select id="savingsType">
+                                        <option value="deposit">Deposit</option>
+                                        <option value="withdrawal">Full Withdrawal (Fee: KSH 500)</option>
+                                        <option value="partial_withdrawal">Partial Withdrawal (Fee: KSH 300)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Amount (KSH)</label>
+                                    <input type="number" id="savingsAmount" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Mode of Payment</label>
+                                    <select id="paymentMode">
+                                        <option value="Direct Bank Deposit">Direct Bank Deposit</option>
+                                        <option value="M-Pesa Deposit">M-Pesa Deposit</option>
+                                        <option value="Milk">Milk</option>
+                                        <option value="Cash">Cash</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Receipt Number</label>
+                                    <input type="text" id="receiptNo" placeholder="Auto-generated" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label>Transaction Code</label>
+                                    <input type="text" id="transactionCode" placeholder="Auto-generated" readonly>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Process Transaction</button>
+                        </form>
+                    </div>
+                    <div class="card">
+                        <h2>Savings Transactions History</h2>
+                        <div class="table-container">
+                            <table id="savingsTable">
+                                <thead><tr><th>Date</th><th>Member</th><th>Type</th><th>Amount</th><th>Receipt No</th><th>Payment Mode</th><th>Trans Code</th></tr></thead>
+                                <tbody id="savingsHistory"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loans Page -->
+                <div id="loans" class="page">
+                    <div class="card">
+                        <h2>Apply for Loan</h2>
+                        <form id="loanForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Select Member</label>
+                                    <select id="loanMember" required></select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Loan Type</label>
+                                    <select id="loanType">
+                                        <option value="DV12">Development Loan DV12 (12 months, 12% interest)</option>
+                                        <option value="DV18">Development Loan DV18 (18 months, 12% interest)</option>
+                                        <option value="DV24">Development Loan DV24 (24 months, 12% interest)</option>
+                                        <option value="DV36">Development Loan DV36 (36 months, 12% interest)</option>
+                                        <option value="UZ12">Uwezo Loan UZ12 (12 months, 18% interest)</option>
+                                        <option value="UZ24">Uwezo Loan UZ24 (24 months, 18% interest)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Loan Amount (KSH)</label>
+                                    <input type="number" id="loanAmount" required>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Apply for Loan</button>
+                        </form>
+                    </div>
+                    <div class="card">
+                        <h2>Make Loan Payment</h2>
+                        <form id="loanPaymentForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Select Loan</label>
+                                    <select id="paymentLoan" required></select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Payment Amount (KSH)</label>
+                                    <input type="number" id="paymentAmount" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Mode of Payment</label>
+                                    <select id="loanPaymentMode">
+                                        <option value="Direct Bank Deposit">Direct Bank Deposit</option>
+                                        <option value="M-Pesa Deposit">M-Pesa Deposit</option>
+                                        <option value="Milk">Milk</option>
+                                        <option value="Cash">Cash</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Receipt Number</label>
+                                    <input type="text" id="loanReceiptNo" placeholder="Auto-generated" readonly>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Make Payment</button>
+                        </form>
+                    </div>
+                    <div class="card">
+                        <h2>Active Loans</h2>
+                        <div class="table-container">
+                            <table id="loansTable">
+                                <thead><tr><th>Loan ID</th><th>Member</th><th>Type</th><th>Amount</th><th>Balance</th><th>Monthly Installment</th><th>Late Days</th><th>Fine</th><th>Status</th></tr></thead>
+                                <tbody id="loansList"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h2>Loan Portfolio at Risk (PAR)</h2>
+                        <div id="parReport"></div>
+                    </div>
+                </div>
+
+                <!-- Expenditure Page -->
+                <div id="expenditure" class="page">
+                    <div class="card">
+                        <h2>Record Expenditure</h2>
+                        <form id="expenditureForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Expense Category</label>
+                                    <input type="text" id="expenseCategory" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Amount (KSH)</label>
+                                    <input type="number" id="expenseAmount" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Description</label>
+                                    <input type="text" id="expenseDesc">
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Record Expense</button>
+                        </form>
+                    </div>
+                    <div class="card">
+                        <h2>Expenditure History</h2>
+                        <div class="table-container">
+                            <table id="expenditureTable">
+                                <thead><tr><th>Date</th><th>Category</th><th>Amount</th><th>Description</th></tr></thead>
+                                <tbody id="expenditureList"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Financial Statements Page -->
+                <div id="financial" class="page">
+                    <div class="card">
+                        <h2>Trial Balance</h2>
+                        <div id="trialBalance"></div>
+                    </div>
+                    <div class="card">
+                        <h2>Income Statement</h2>
+                        <div id="incomeStatement"></div>
+                    </div>
+                    <div class="card">
+                        <h2>Balance Sheet</h2>
+                        <div id="balanceSheet"></div>
+                    </div>
+                </div>
+
+                <!-- Reports Page -->
+                <div id="reports" class="page">
+                    <div class="card">
+                        <h2>Generate Member Statement</h2>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Select Member</label>
+                                <select id="reportMember"></select>
+                            </div>
+                            <div class="form-group">
+                                <label>Statement Type</label>
+                                <select id="statementType">
+                                    <option value="savings">Savings Statement</option>
+                                    <option value="loan">Loan Statement</option>
+                                </select>
+                            </div>
+                            <button onclick="generateStatement()" class="btn btn-primary">Generate Statement</button>
+                        </div>
+                        <div id="memberStatement"></div>
+                    </div>
+                </div>
+
+                <!-- General Ledger Page -->
+                <div id="ledger" class="page">
+                    <div class="card">
+                        <h2>General Ledger</h2>
+                        <div class="table-container">
+                            <table id="ledgerTable">
+                                <thead><tr><th>Date</th><th>Account</th><th>Description</th><th>Debit (KSH)</th><th>Credit (KSH)</th><th>Balance (KSH)</th></tr></thead>
+                                <tbody id="ledgerEntries"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Remove Member Modal -->
+    <div id="removeMemberModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3>Remove Member</h3>
+            <div id="memberDetails"></div>
+            <div class="warning-box">
+                <strong>⚠️ Warning:</strong> Removing a member will:
+                <ul>
+                    <li>Close all active loans</li>
+                    <li>Process final savings withdrawal with applicable charges</li>
+                    <li>Member cannot be restored</li>
+                </ul>
+            </div>
+            <div class="form-group">
+                <label>Reason for removal:</label>
+                <select id="removalReason">
+                    <option value="Voluntary Withdrawal">Voluntary Withdrawal</option>
+                    <option value="Default">Default on Loans</option>
+                    <option value="Death">Death of Member</option>
+                    <option value="Expulsion">Expulsion</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Process final withdrawal?</label>
+                <select id="processWithdrawal">
+                    <option value="yes">Yes - Process final savings withdrawal (KSH 500 charge applies)</option>
+                    <option value="no">No - Just deactivate member</option>
+                </select>
+            </div>
+            <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                <button id="confirmRemoveMember" class="btn btn-danger">Confirm Remove Member</button>
+                <button id="cancelRemoveMember" class="btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
